@@ -21,10 +21,10 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
     - [x] Implement `expo-secure-store` Adapter for Supabase.
     - [x] Build Login Screen (Gold & Carbon UI).
     - [x] Build Sign-up Screen.
-- [ ] **Profile Feature:**
-    - [ ] Fetch User Profile from `profiles` table.
-    - [ ] Display Avatar & Username.
-    - [ ] Implement Edit Profile (Avatar upload).
+- [x] **Profile Feature:**
+    - [x] Fetch User Profile from `profiles` table.
+    - [x] Display Avatar & Username.
+    - [x] Implement Edit Profile (Avatar upload).
 
 ## Phase 2: Data Core (Jikan & Library)
 - [ ] **Search Feature (Jikan API v4):**

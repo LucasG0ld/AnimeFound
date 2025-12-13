@@ -4,6 +4,9 @@ import { colors } from '../core/theme/colors';
 import { StatusBar } from 'expo-status-bar';
 import { AuthProvider, useAuth } from '../core/auth/AuthContext';
 import { View, ActivityIndicator } from 'react-native';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const RootLayoutNav = () => {
     const { session, loading } = useAuth();
@@ -52,6 +55,7 @@ const RootLayoutNav = () => {
                 <Stack.Screen name="index" options={{ title: 'Accueil' }} />
                 <Stack.Screen name="login" options={{ headerShown: false }} />
                 <Stack.Screen name="signup" options={{ headerShown: false }} />
+                <Stack.Screen name="profile" options={{ title: 'Mon Profil', headerShown: true }} />
             </Stack>
         </>
     );
@@ -59,8 +63,10 @@ const RootLayoutNav = () => {
 
 export default function RootLayout() {
     return (
-        <AuthProvider>
-            <RootLayoutNav />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+                <RootLayoutNav />
+            </AuthProvider>
+        </QueryClientProvider>
     );
 }
