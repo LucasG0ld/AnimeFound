@@ -38,6 +38,9 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
     - [x] Implement `FlashList` for performant list rendering.
     - [x] Implement Library Fetch Hook (Joined).
     - [x] Implement Library Update/Delete Hooks.
+    - [x] Implement Shared Catalogue Aggregation Hook <!-- id: 22 -->
+    - [x] Implement Group Activity Feed Hook <!-- id: 23 -->
+    - [x] Update Group Details UI (Tabs: Feed/Catalogue) <!-- id: 24 -->
     - [x] Setup Tabs Layout (Expo Router).
     - [x] Build Library Screen UI (Grid + Filters).
 
@@ -45,8 +48,8 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
 - [x] **Group System:**
     - [x] Create/Update `groups` and `group_members` tables (Done in Schema).
     - [x] Implement Logic: Create Group, Join (via Code), List User Groups.
-    - [x] Build Screens: Group List & Group Details (Members List).
-    - [ ] **Activity Feed:** Real-time(ish) updates of member activities using `FlashList`.
+    - [x] **Shared Catalogue:** Implement the "De-duplication" Query (Aggregated View).
+    - [x] **Activity Feed:** Real-time(ish) updates of member activities using `FlashList`.
 - [ ] **UI/UX Polish:**
     - [ ] Verify "Gold & Carbon" Theme consistency (`#2B2B2B` / `#FFBF00`).
     - [ ] **Localization:** Ensure ALL user-facing text is in **FRENCH**.
