@@ -10,7 +10,7 @@ import { Input } from '../components/ui/Input';
 export default function LoginScreen() {
     const router = useRouter();
     const insets = useSafeAreaInsets();
-    const { signInWithEmail } = useAuth();
+    const { signInWithEmail, signInWithGoogle } = useAuth();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -66,11 +66,16 @@ export default function LoginScreen() {
                         style={styles.button}
                     />
 
-                    {/* Social Auth Placeholder */}
+                    {/* Social Auth */}
                     <Button
                         title="Se connecter avec Google"
                         variant="secondary"
-                        onPress={() => Alert.alert('Bientôt disponible', 'La connexion Google arrive bientôt !')}
+                        onPress={async () => {
+                            setLoading(true);
+                            const { error } = await signInWithGoogle();
+                            setLoading(false);
+                            if (error) Alert.alert('Erreur Google', error.message || 'Echec de la connexion');
+                        }}
                         style={styles.socialButton}
                     />
                 </View>

@@ -3,6 +3,7 @@
     "name": "AnimeFound",
     "slug": "anime-found",
     "version": "1.0.0",
+    "scheme": "animefound",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",

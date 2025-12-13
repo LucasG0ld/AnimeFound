@@ -1,12 +1,15 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '../services/supabase';
+import * as Linking from 'expo-linking';
+import * as WebBrowser from 'expo-web-browser';
 
 type AuthContextType = {
     session: Session | null;
     user: User | null;
     loading: boolean;
     signInWithEmail: (email: string, password: string) => Promise<{ error: any }>;
+    signInWithGoogle: () => Promise<{ error: any }>;
     signUp: (email: string, password: string, username: string) => Promise<{ error: any }>;
     signOut: () => Promise<void>;
 };
@@ -16,6 +19,7 @@ const AuthContext = createContext<AuthContextType>({
     user: null,
     loading: true,
     signInWithEmail: async () => ({ error: null }),
+    signInWithGoogle: async () => ({ error: null }),
     signUp: async () => ({ error: null }),
     signOut: async () => { },
 });
@@ -53,13 +57,54 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return { error };
     };
 
+    const signInWithGoogle = async () => {
+        try {
+            const redirectUrl = Linking.createURL('/auth/callback');
+            const { data, error } = await supabase.auth.signInWithOAuth({
+                provider: 'google',
+                options: {
+                    redirectTo: redirectUrl,
+                    skipBrowserRedirect: true,
+                },
+            });
+
+            if (error) throw error;
+
+            if (data?.url) {
+                const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUrl);
+
+                if (result.type === 'success' && result.url) {
+                    const url = result.url;
+                    // Check if URL has hash (implicit flow default for Supabase)
+                    if (url.includes('access_token')) {
+                        const params = new URLSearchParams(url.split('#')[1]);
+                        const access_token = params.get('access_token');
+                        const refresh_token = params.get('refresh_token');
+
+                        if (access_token && refresh_token) {
+                            const { error: setSessionError } = await supabase.auth.setSession({
+                                access_token,
+                                refresh_token,
+                            });
+                            if (setSessionError) throw setSessionError;
+                            return { error: null };
+                        }
+                    }
+                }
+            }
+            return { error: null };
+        } catch (error) {
+            return { error: error };
+        }
+    };
+
     const signUp = async (email: string, password: string, username: string) => {
         const { error } = await supabase.auth.signUp({
             email,
             password,
             options: {
                 data: {
-                    username, // Stores username in user_metadata, will be copied to public.profiles via Trigger
+                    username,
                 },
             },
         });
@@ -77,6 +122,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 user,
                 loading,
                 signInWithEmail,
+                signInWithGoogle,
                 signUp,
                 signOut,
             }}
