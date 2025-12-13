@@ -50,7 +50,9 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
     - [x] Implement Logic: Create Group, Join (via Code), List User Groups.
     - [x] **Shared Catalogue:** Implement the "De-duplication" Query (Aggregated View).
     - [x] **Activity Feed:** Real-time(ish) updates of member activities using `FlashList`.
-- [ ] **UI/UX Polish:**
-    - [ ] Verify "Gold & Carbon" Theme consistency (`#2B2B2B` / `#FFBF00`).
-    - [ ] **Localization:** Ensure ALL user-facing text is in **FRENCH**.
-    - [ ] Optimize Images (Portrait Ratio enforcement).
+- [x] **UI/UX Polish:**
+    - [x] Verify "Gold & Carbon" Theme consistency (`#2B2B2B` / `#FFBF00`).
+    - [x] **Localization:** Ensure ALL user-facing text is in **FRENCH**.
+    - [x] Optimize Images (Portrait Ratio enforcement).
+    - [x] Implement Empty States for all screens.
+    - [x] Configure `app.json` (Name, Orientation, Dark Mode).

@@ -156,7 +156,7 @@ export default function GroupDetailsScreen() {
               data={catalogue || []}
               renderItem={renderCatalogueItem}
               estimatedItemSize={100}
-              ListEmptyComponent={<Text style={styles.emptyText}>Aucun anime partagé.</Text>}
+              ListEmptyComponent={<Text style={styles.emptyText}>Aucun anime en commun pour l'instant.</Text>}
             />
           )
         ) : (

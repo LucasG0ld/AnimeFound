@@ -95,7 +95,8 @@ export default function GroupsScreen() {
                     contentContainerStyle={styles.listContent}
                     ListEmptyComponent={
                         <View style={styles.center}>
-                            <Text style={styles.emptyText}>Vous n'avez rejoint aucun groupe.</Text>
+                            <Text style={styles.emptyText}>Rejoignez ou créez votre premier Squad !</Text>
+                            <Users size={48} color={colors.slate} style={{ marginTop: 20 }} />
                         </View>
                     }
                 />

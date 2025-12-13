@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors } from '../../core/theme/colors';
 import { useUserLibrary, WatchStatus, LibraryItem } from '../../features/library/useUserLibrary';
@@ -32,6 +33,7 @@ const LibraryGridItem = ({ item }: { item: LibraryItem }) => {
 };
 
 export default function LibraryScreen() {
+    const router = useRouter();
     const insets = useSafeAreaInsets();
     const [status, setStatus] = useState<WatchStatus>('WATCHING');
     const { data: libraryItems, isLoading } = useUserLibrary(status);
@@ -67,7 +69,19 @@ export default function LibraryScreen() {
                     contentContainerStyle={{ padding: 12, paddingBottom: 100 }}
                     ListEmptyComponent={
                         <View style={styles.center}>
-                            <Text style={styles.emptyText}>Aucun anime dans cette liste.</Text>
+                            <Text style={styles.emptyText}>Votre bibliothèque est vide.</Text>
+                            <TouchableOpacity
+                                onPress={() => router.push('/(tabs)/search')}
+                                style={{
+                                    marginTop: 12,
+                                    backgroundColor: colors.gold,
+                                    paddingHorizontal: 20,
+                                    paddingVertical: 10,
+                                    borderRadius: 20
+                                }}
+                            >
+                                <Text style={{ fontWeight: 'bold', color: colors.carbon }}>Ajouter un anime</Text>
+                            </TouchableOpacity>
                         </View>
                     }
                 />
