@@ -32,10 +32,14 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
     - [x] **Data Strategy:** Implement "Cache-First" Pattern.
         - *Logic:* `Check Supabase 'animes' -> If Miss, Fetch Jikan -> Insert 'animes' -> Return`.
     - [x] Build Search UI (Debounced Input).
-- [ ] **Library Management:**
-    - [ ] Create `library_items` Interaction (Add/Update Status).
-    - [ ] Build "My Library" Screen with Tabs (Watching, Completed, etc.).
-    - [ ] Implement `FlashList` for performant list rendering.
+- [x] **Library Management:**
+    - [x] Create `library_items` Interaction (Add/Update Status).
+    - [x] Build "My Library" Screen with Tabs (Watching, Completed, etc.).
+    - [x] Implement `FlashList` for performant list rendering.
+    - [x] Implement Library Fetch Hook (Joined).
+    - [x] Implement Library Update/Delete Hooks.
+    - [x] Setup Tabs Layout (Expo Router).
+    - [x] Build Library Screen UI (Grid + Filters).
 
 ## Phase 3: Social & UI Polish
 - [ ] **Group System:**

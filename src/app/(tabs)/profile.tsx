@@ -5,11 +5,11 @@ import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { decode } from 'base64-arraybuffer';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { colors } from '../core/theme/colors';
-import { useUserProfile } from '../features/profile/useUserProfile';
-import { useAuth } from '../core/auth/AuthContext';
-import { supabase } from '../core/services/supabase';
-import { Button } from '../components/ui/Button';
+import { colors } from '../../core/theme/colors';
+import { useUserProfile } from '../../features/profile/useUserProfile';
+import { useAuth } from '../../core/auth/AuthContext';
+import { supabase } from '../../core/services/supabase';
+import { Button } from '../../components/ui/Button';
 import { useQueryClient } from '@tanstack/react-query';
 
 export default function ProfileScreen() {

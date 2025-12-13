@@ -4,11 +4,11 @@ import { FlashList } from '@shopify/flash-list';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { colors } from '../core/theme/colors';
-import { Input } from '../components/ui/Input';
-import { useAnimeSearch } from '../features/search/useAnimeSearch';
-import { useAddAnime } from '../features/library/useAddAnime';
-import { JikanAnime } from '../core/services/jikan';
+import { colors } from '../../core/theme/colors';
+import { Input } from '../../components/ui/Input';
+import { useAnimeSearch } from '../../features/search/useAnimeSearch';
+import { useAddAnime } from '../../features/library/useAddAnime';
+import { JikanAnime } from '../../core/services/jikan';
 import { Plus, Check } from 'lucide-react-native';
 
 const AnimeListItem = ({ item, onAdd }: { item: JikanAnime; onAdd: (anime: JikanAnime) => void }) => {

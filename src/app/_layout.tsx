@@ -22,8 +22,8 @@ const RootLayoutNav = () => {
             // Redirect to the login page
             router.replace('/login');
         } else if (session && inAuthGroup) {
-            // Redirect back to the home page
-            router.replace('/');
+            // Redirect back to the library
+            router.replace('/(tabs)/library');
         }
     }, [session, loading, segments]);
 
@@ -52,11 +52,10 @@ const RootLayoutNav = () => {
                     },
                 }}
             >
-                <Stack.Screen name="index" options={{ title: 'Accueil' }} />
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="index" options={{ headerShown: false }} />
                 <Stack.Screen name="login" options={{ headerShown: false }} />
                 <Stack.Screen name="signup" options={{ headerShown: false }} />
-                <Stack.Screen name="profile" options={{ title: 'Mon Profil', headerShown: true }} />
-                <Stack.Screen name="search" options={{ title: 'Recherche', headerShown: true }} />
             </Stack>
         </>
     );
