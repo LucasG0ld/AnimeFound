@@ -42,9 +42,10 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
     - [x] Build Library Screen UI (Grid + Filters).
 
 ## Phase 3: Social & UI Polish
-- [ ] **Group System:**
-    - [ ] Create Group / Join Group (Invite Code).
-    - [ ] **Shared Catalogue:** Implement the "De-duplication" Query (Aggregated View).
+- [x] **Group System:**
+    - [x] Create/Update `groups` and `group_members` tables (Done in Schema).
+    - [x] Implement Logic: Create Group, Join (via Code), List User Groups.
+    - [x] Build Screens: Group List & Group Details (Members List).
     - [ ] **Activity Feed:** Real-time(ish) updates of member activities using `FlashList`.
 - [ ] **UI/UX Polish:**
     - [ ] Verify "Gold & Carbon" Theme consistency (`#2B2B2B` / `#FFBF00`).

@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import { colors } from '../../core/theme/colors';
-import { Library, Search, User } from 'lucide-react-native';
+import { Library, Search, User, Users } from 'lucide-react-native';
 
 export default function TabLayout() {
     return (
@@ -33,6 +33,13 @@ export default function TabLayout() {
                 options={{
                     title: 'Recherche',
                     tabBarIcon: ({ color }) => <Search size={24} color={color} />,
+                }}
+            />
+            <Tabs.Screen
+                name="groups"
+                options={{
+                    title: 'Groupes',
+                    tabBarIcon: ({ color }) => <Users size={24} color={color} />,
                 }}
             />
             <Tabs.Screen
