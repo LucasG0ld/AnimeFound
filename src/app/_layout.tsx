@@ -1,8 +1,37 @@
-import { Stack } from 'expo-router';
+import { useEffect } from 'react';
+import { Stack, useRouter, useSegments } from 'expo-router';
 import { colors } from '../core/theme/colors';
 import { StatusBar } from 'expo-status-bar';
+import { AuthProvider, useAuth } from '../core/auth/AuthContext';
+import { View, ActivityIndicator } from 'react-native';
 
-export default function RootLayout() {
+const RootLayoutNav = () => {
+    const { session, loading } = useAuth();
+    const segments = useSegments();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (loading) return;
+
+        const inAuthGroup = segments[0] === 'login' || segments[0] === 'signup';
+
+        if (!session && !inAuthGroup) {
+            // Redirect to the login page
+            router.replace('/login');
+        } else if (session && inAuthGroup) {
+            // Redirect back to the home page
+            router.replace('/');
+        }
+    }, [session, loading, segments]);
+
+    if (loading) {
+        return (
+            <View style={{ flex: 1, backgroundColor: colors.carbon, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color={colors.gold} />
+            </View>
+        );
+    }
+
     return (
         <>
             <StatusBar style="light" backgroundColor={colors.carbon} />
@@ -21,7 +50,17 @@ export default function RootLayout() {
                 }}
             >
                 <Stack.Screen name="index" options={{ title: 'Accueil' }} />
+                <Stack.Screen name="login" options={{ headerShown: false }} />
+                <Stack.Screen name="signup" options={{ headerShown: false }} />
             </Stack>
         </>
+    );
+};
+
+export default function RootLayout() {
+    return (
+        <AuthProvider>
+            <RootLayoutNav />
+        </AuthProvider>
     );
 }

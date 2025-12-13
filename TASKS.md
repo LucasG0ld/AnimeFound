@@ -19,8 +19,8 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
 - [/] **Auth Implementation:**
     - [x] Create `AuthContext` / Session Provider.
     - [x] Implement `expo-secure-store` Adapter for Supabase.
-    - [ ] Build Login Screen (Gold & Carbon UI).
-    - [ ] Build Sign-up Screen.
+    - [x] Build Login Screen (Gold & Carbon UI).
+    - [x] Build Sign-up Screen.
 - [ ] **Profile Feature:**
     - [ ] Fetch User Profile from `profiles` table.
     - [ ] Display Avatar & Username.
