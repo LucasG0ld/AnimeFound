@@ -6,6 +6,7 @@ import { colors } from '../core/theme/colors';
 import { useAuth } from '../core/auth/AuthContext';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
+import { supabase } from '../core/services/supabase';
 
 export default function LoginScreen() {
     const router = useRouter();
@@ -60,23 +61,10 @@ export default function LoginScreen() {
                     />
 
                     <Button
-                        title="Se connecter avec Email"
+                        title="Se connecter"
                         onPress={handleLogin}
                         loading={loading}
                         style={styles.button}
-                    />
-
-                    {/* Social Auth */}
-                    <Button
-                        title="Se connecter avec Google"
-                        variant="secondary"
-                        onPress={async () => {
-                            setLoading(true);
-                            const { error } = await signInWithGoogle();
-                            setLoading(false);
-                            if (error) Alert.alert('Erreur Google', error.message || 'Echec de la connexion');
-                        }}
-                        style={styles.socialButton}
                     />
                 </View>
 

@@ -15,6 +15,8 @@ export const useUserProfile = () => {
     const fetchProfile = async (): Promise<UserProfile | null> => {
         if (!session?.user.id) return null;
 
+        console.log('Fetching Profile for User ID:', session.user.id);
+
         const { data, error } = await supabase
             .from('profiles')
             .select('*')
@@ -22,10 +24,12 @@ export const useUserProfile = () => {
             .single();
 
         if (error) {
-            console.error('Error fetching profile:', error);
+            console.error('Error fetching profile (might retry):', error.message);
+            // Throw error to trigger retry in React Query
             throw error;
         }
 
+        console.log('Profile fetched successfully:', data);
         return data;
     };
 
@@ -33,5 +37,7 @@ export const useUserProfile = () => {
         queryKey: ['profile', session?.user.id],
         queryFn: fetchProfile,
         enabled: !!session?.user.id,
+        retry: 3,
+        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000), // Backoff: 1s, 2s, 4s
     });
 };

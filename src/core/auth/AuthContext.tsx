@@ -50,16 +50,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     const signInWithEmail = async (email: string, password: string) => {
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
-        return { error };
+        try {
+            const { error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+            if (error) throw error;
+            return { error: null };
+        } catch (error: any) {
+            console.error('Sign In Error:', error);
+            return { error };
+        }
     };
 
     const signInWithGoogle = async () => {
         try {
+            // Hardcoded redirect to ensure consistency with scheme
             const redirectUrl = Linking.createURL('/auth/callback');
+            console.log('OAuth Redirect URL sent to Supabase:', redirectUrl);
+
+            // Ensure browser session cleanup
+            WebBrowser.maybeCompleteAuthSession();
+
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
@@ -71,13 +83,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (error) throw error;
 
             if (data?.url) {
+                console.log('Opening Auth Session with URL:', data.url);
                 const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUrl);
+
+                console.log('WebBrowser Result:', result);
 
                 if (result.type === 'success' && result.url) {
                     const url = result.url;
-                    // Check if URL has hash (implicit flow default for Supabase)
-                    if (url.includes('access_token')) {
-                        const params = new URLSearchParams(url.split('#')[1]);
+                    console.log('Deep Link received:', url);
+
+                    if (url.includes('access_token') || url.includes('code')) {
+                        const params = new URLSearchParams(url.split('#')[1] || url.split('?')[1]);
                         const access_token = params.get('access_token');
                         const refresh_token = params.get('refresh_token');
 
@@ -94,25 +110,43 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
             return { error: null };
         } catch (error) {
+            console.error('Google Sign-In Error:', error);
             return { error: error };
         }
     };
 
     const signUp = async (email: string, password: string, username: string) => {
-        const { error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {
-                    username,
+        try {
+            const { error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: {
+                        username,
+                    },
                 },
-            },
-        });
-        return { error };
+            });
+            if (error) {
+                console.error('Supabase SignUp Error (Details):', JSON.stringify(error, null, 2));
+                throw error;
+            }
+            return { error: null };
+        } catch (error: any) {
+            console.error('Sign Up Catch Error:', error);
+            return { error };
+        }
     };
 
     const signOut = async () => {
-        await supabase.auth.signOut();
+        try {
+            await supabase.auth.signOut();
+            setSession(null);
+            setUser(null);
+            // Optionally clear specific keys if needed, but supabase.auth.signOut() handles the adapter.
+            // If using pure Expo SecureStore adapter, it should delete the key.
+        } catch (error) {
+            console.error('Sign Out Error:', error);
+        }
     };
 
     return (

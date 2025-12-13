@@ -14,6 +14,12 @@ const RootLayoutNav = () => {
     const router = useRouter();
 
     useEffect(() => {
+        if (!process.env.EXPO_PUBLIC_SUPABASE_URL || !process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY) {
+            alert('CRITICAL ERROR: Supabase Environment Variables Missing! Check .env');
+        }
+    }, []);
+
+    useEffect(() => {
         if (loading) return;
 
         const inAuthGroup = segments[0] === 'login' || segments[0] === 'signup';

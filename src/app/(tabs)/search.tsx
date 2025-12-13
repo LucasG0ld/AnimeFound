@@ -79,24 +79,33 @@ export default function SearchScreen() {
                 />
             </View>
 
-            {isLoading && (
-                <View style={styles.center}>
-                    <ActivityIndicator size="large" color={colors.gold} />
+            {/* Content or Empty State */}
+            {query.length === 0 ? (
+                <View style={[styles.center, { marginTop: 100 }]}>
+                    <Text style={styles.emptyText}>Recherchez une œuvre pour l'ajouter à votre collection</Text>
                 </View>
+            ) : (
+                <>
+                    {isLoading ? (
+                        <View style={styles.center}>
+                            <ActivityIndicator size="large" color={colors.gold} />
+                        </View>
+                    ) : (
+                        <SafeFlashList
+                            data={results || []}
+                            renderItem={({ item }: { item: JikanAnime }) => <AnimeListItem item={item} onAdd={handleAdd} />}
+                            estimatedItemSize={100}
+                            keyExtractor={(item: JikanAnime) => item.mal_id.toString()}
+                            contentContainerStyle={styles.listContent}
+                            ListEmptyComponent={
+                                !isLoading && query.length > 2 ? (
+                                    <Text style={styles.emptyText}>Aucun résultat trouvé.</Text>
+                                ) : null
+                            }
+                        />
+                    )}
+                </>
             )}
-
-            <SafeFlashList
-                data={results || []}
-                renderItem={({ item }: { item: JikanAnime }) => <AnimeListItem item={item} onAdd={handleAdd} />}
-                estimatedItemSize={100}
-                keyExtractor={(item: JikanAnime) => item.mal_id.toString()}
-                contentContainerStyle={styles.listContent}
-                ListEmptyComponent={
-                    !isLoading && query.length > 2 ? (
-                        <Text style={styles.emptyText}>Aucun résultat trouvé.</Text>
-                    ) : null
-                }
-            />
         </View>
     );
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
@@ -10,49 +10,46 @@ import { useUserLibrary, WatchStatus, LibraryItem } from '../../features/library
 // Fix FlashList Typing
 const SafeFlashList = FlashList as any;
 
-const STATUS_TABS: { label: string; value: WatchStatus }[] = [
+const STATUS_TABS: { label: string; value: WatchStatus | 'ALL' }[] = [
+    { label: 'Tous', value: 'ALL' },
     { label: 'En cours', value: 'WATCHING' },
     { label: 'Terminés', value: 'COMPLETED' },
     { label: 'À voir', value: 'PLAN_TO_WATCH' },
     { label: 'Abandonnés', value: 'DROPPED' },
 ];
 
-const LibraryGridItem = ({ item }: { item: LibraryItem }) => {
-    return (
-        <TouchableOpacity style={styles.card} activeOpacity={0.7}>
-            <Image
-                source={{ uri: item.anime.image_url }}
-                style={styles.cardImage}
-                contentFit="cover"
-                transition={200}
-            />
-            <Text style={styles.cardTitle} numberOfLines={1}>{item.anime.title_en}</Text>
-            <Text style={styles.cardYear}>{item.anime.year || 'N/A'}</Text>
-        </TouchableOpacity>
-    );
-};
+// ... imports
+import { AnimeCard } from '../../features/library/components/AnimeCard';
+
+// ... tabs logic ...
 
 export default function LibraryScreen() {
     const router = useRouter();
     const insets = useSafeAreaInsets();
-    const [status, setStatus] = useState<WatchStatus>('WATCHING');
+    const [status, setStatus] = useState<WatchStatus | 'ALL'>('ALL');
     const { data: libraryItems, isLoading } = useUserLibrary(status);
 
     return (
         <View style={styles.container}>
             {/* Status Tabs */}
-            <View style={styles.tabsContainer}>
-                {STATUS_TABS.map((tab) => (
-                    <TouchableOpacity
-                        key={tab.value}
-                        style={[styles.tab, status === tab.value && styles.activeTab]}
-                        onPress={() => setStatus(tab.value)}
-                    >
-                        <Text style={[styles.tabText, status === tab.value && styles.activeTabText]}>
-                            {tab.label}
-                        </Text>
-                    </TouchableOpacity>
-                ))}
+            <View style={styles.tabsWrapper}>
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.tabsContent}
+                >
+                    {STATUS_TABS.map((tab) => (
+                        <TouchableOpacity
+                            key={tab.value}
+                            style={[styles.tab, status === tab.value && styles.activeTab]}
+                            onPress={() => setStatus(tab.value)}
+                        >
+                            <Text style={[styles.tabText, status === tab.value && styles.activeTabText]}>
+                                {tab.label}
+                            </Text>
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
             </View>
 
             {/* Content */}
@@ -63,10 +60,14 @@ export default function LibraryScreen() {
             ) : (
                 <SafeFlashList
                     data={libraryItems || []}
-                    renderItem={({ item }: { item: LibraryItem }) => <LibraryGridItem item={item} />}
-                    estimatedItemSize={200}
-                    numColumns={2}
-                    contentContainerStyle={{ padding: 12, paddingBottom: 100 }}
+                    renderItem={({ item }: { item: LibraryItem }) => <AnimeCard item={item} />}
+                    estimatedItemSize={180}
+                    numColumns={3}
+                    contentContainerStyle={{
+                        paddingHorizontal: 10,
+                        paddingTop: 15,
+                        paddingBottom: 100
+                    }}
                     ListEmptyComponent={
                         <View style={styles.center}>
                             <Text style={styles.emptyText}>Votre bibliothèque est vide.</Text>
@@ -95,12 +96,15 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.carbon,
     },
-    tabsContainer: {
-        flexDirection: 'row',
-        padding: 12,
+    tabsWrapper: {
         backgroundColor: colors.carbon,
         borderBottomWidth: 1,
         borderBottomColor: colors.slate,
+    },
+    tabsContent: {
+        flexDirection: 'row',
+        padding: 12,
+        paddingRight: 40,
     },
     tab: {
         paddingVertical: 8,
@@ -131,31 +135,5 @@ const styles = StyleSheet.create({
     emptyText: {
         color: colors.textSecondary,
         fontSize: 16,
-    },
-    // Grid Card
-    card: {
-        flex: 1,
-        margin: 8,
-        backgroundColor: colors.slate,
-        borderRadius: 8,
-        overflow: 'hidden',
-        maxWidth: '46%', // 2 columns with margin
-    },
-    cardImage: {
-        width: '100%',
-        height: 220, // Portal aspect ratio
-    },
-    cardTitle: {
-        color: colors.textPrimary,
-        fontWeight: 'bold',
-        fontSize: 14,
-        marginHorizontal: 8,
-        marginTop: 8,
-    },
-    cardYear: {
-        color: colors.textSecondary,
-        fontSize: 12,
-        marginHorizontal: 8,
-        marginBottom: 12,
     },
 });
