@@ -8,6 +8,7 @@ export const colors = {
   // Primary (Backgrounds)
   carbon: '#2B2B2B', // Main Background
   slate: '#3C3C3C',  // Cards / Headers / Bottom Sheet
+  surface: '#3C3C3C', // Inputs / Chips (Alias for Slate)
 
   // Accent (Action)
   gold: '#FFBF00',   // Primary Buttons / Active State
@@ -15,7 +16,7 @@ export const colors = {
   // Functional
   textPrimary: '#F0F0F0', // Headings / Body
   textSecondary: '#A0A0A0', // Metadata
-  
+
   // Feedback
   success: '#4CAF50',  // Added / Airing
   error: '#E53935',    // Delete / Dropped

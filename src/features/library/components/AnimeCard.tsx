@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, Dimensions } from 'react-native';
 import { Image } from 'expo-image';
+import { Link } from 'expo-router';
 import { colors } from '../../../core/theme/colors';
 import { LibraryItem } from '../useUserLibrary';
 
@@ -14,17 +15,19 @@ const ITEM_WIDTH = (SCREEN_WIDTH - (HORIZONTAL_PADDING * 2) - ((COLUMN_COUNT - 1
 
 export const AnimeCard = ({ item }: { item: LibraryItem }) => {
     return (
-        <TouchableOpacity style={styles.card} activeOpacity={0.7}>
-            <Image
-                source={{ uri: item.anime.image_url }}
-                style={styles.cardImage}
-                contentFit="cover"
-                transition={200}
-            />
-            <Text style={styles.cardTitle} numberOfLines={2}>
-                {item.anime.title_en || 'Titre Inconnu'}
-            </Text>
-        </TouchableOpacity>
+        <Link href={`/anime/${item.anime.id}`} asChild>
+            <TouchableOpacity style={styles.card} activeOpacity={0.7}>
+                <Image
+                    source={{ uri: item.anime.image_url }}
+                    style={styles.cardImage}
+                    contentFit="cover"
+                    transition={200}
+                />
+                <Text style={styles.cardTitle} numberOfLines={2}>
+                    {item.anime.title_en || 'Titre Inconnu'}
+                </Text>
+            </TouchableOpacity>
+        </Link>
     );
 };
 

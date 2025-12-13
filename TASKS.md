@@ -56,3 +56,20 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
     - [x] Optimize Images (Portrait Ratio enforcement).
     - [x] Implement Empty States for all screens.
     - [x] Configure `app.json` (Name, Orientation, Dark Mode).
+
+## Phase 4: Expansion & Polish
+- [x] **Anime Details Screen:**
+    - [x] Dynamic Route `src/app/anime/[id].tsx`.
+    - [x] Fetch Metadata & User Status/Rating (Joined Query).
+    - [x] Interactions: Change Status, Set Rating, Edit Comment.
+- [ ] **Settings & Profile Expansion:**
+    - [ ] Create `src/app/settings.tsx`.
+    - [ ] Move Logout Button to Settings.
+    - [ ] Add App Version Display.
+    - [ ] Privacy: "Delete Account" Button (Supabase Auth Cascade).
+- [ ] **Group Administration:**
+    - [ ] Feature: "Leave Group" (Member).
+    - [ ] Feature: "Remove Member" (Admin Only).
+- [ ] **Final Cleanup:**
+    - [ ] Remove all `console.log`.
+    - [ ] Ensure 100% French Localization.
