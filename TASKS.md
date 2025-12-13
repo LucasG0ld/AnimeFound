@@ -27,11 +27,11 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
     - [x] Implement Edit Profile (Avatar upload).
 
 ## Phase 2: Data Core (Jikan & Library)
-- [ ] **Search Feature (Jikan API v4):**
-    - [ ] Implement Jikan Client with Rate Limiting handling.
-    - [ ] **Data Strategy:** Implement "Cache-First" Pattern.
+- [x] **Search Feature (Jikan API v4):**
+    - [x] Implement Jikan Client with Rate Limiting handling.
+    - [x] **Data Strategy:** Implement "Cache-First" Pattern.
         - *Logic:* `Check Supabase 'animes' -> If Miss, Fetch Jikan -> Insert 'animes' -> Return`.
-    - [ ] Build Search UI (Debounced Input).
+    - [x] Build Search UI (Debounced Input).
 - [ ] **Library Management:**
     - [ ] Create `library_items` Interaction (Add/Update Status).
     - [ ] Build "My Library" Screen with Tabs (Watching, Completed, etc.).

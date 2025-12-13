@@ -56,6 +56,7 @@ const RootLayoutNav = () => {
                 <Stack.Screen name="login" options={{ headerShown: false }} />
                 <Stack.Screen name="signup" options={{ headerShown: false }} />
                 <Stack.Screen name="profile" options={{ title: 'Mon Profil', headerShown: true }} />
+                <Stack.Screen name="search" options={{ title: 'Recherche', headerShown: true }} />
             </Stack>
         </>
     );
