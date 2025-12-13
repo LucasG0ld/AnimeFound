@@ -62,11 +62,11 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
     - [x] Dynamic Route `src/app/anime/[id].tsx`.
     - [x] Fetch Metadata & User Status/Rating (Joined Query).
     - [x] Interactions: Change Status, Set Rating, Edit Comment.
-- [ ] **Settings & Profile Expansion:**
-    - [ ] Create `src/app/settings.tsx`.
-    - [ ] Move Logout Button to Settings.
-    - [ ] Add App Version Display.
-    - [ ] Privacy: "Delete Account" Button (Supabase Auth Cascade).
+- [x] **Settings & Profile Expansion:**
+    - [x] Create `src/app/settings.tsx`.
+    - [x] Move Logout Button to Settings.
+    - [x] Add App Version Display.
+    - [x] Privacy: "Delete Account" Button (Supabase Auth Cascade).
 - [ ] **Group Administration:**
     - [ ] Feature: "Leave Group" (Member).
     - [ ] Feature: "Remove Member" (Admin Only).

@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity, ScrollView } from 'react-native';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
 import { decode } from 'base64-arraybuffer';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Settings } from 'lucide-react-native';
+import { useRouter } from 'expo-router';
 import { colors } from '../../core/theme/colors';
 import { useUserProfile } from '../../features/profile/useUserProfile';
 import { useAuth } from '../../core/auth/AuthContext';
@@ -14,8 +15,9 @@ import { useQueryClient } from '@tanstack/react-query';
 
 export default function ProfileScreen() {
     const insets = useSafeAreaInsets();
+    const router = useRouter();
     const { data: profile, isLoading } = useUserProfile();
-    const { signOut, user } = useAuth();
+    const { user } = useAuth();
     const queryClient = useQueryClient();
     const [uploading, setUploading] = useState(false);
 
@@ -83,6 +85,14 @@ export default function ProfileScreen() {
 
     return (
         <ScrollView style={[styles.container]} contentContainerStyle={{ paddingBottom: insets.bottom + 20 }}>
+            {/* Header Icons */}
+            <View style={[styles.topBar, { marginTop: insets.top }]}>
+                <View style={{ flex: 1 }} />
+                <TouchableOpacity onPress={() => router.push('/settings')} style={styles.settingsButton}>
+                    <Settings color={colors.gold} size={24} />
+                </TouchableOpacity>
+            </View>
+
             {/* Header Profile */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={handlePickImage} disabled={uploading}>
@@ -139,19 +149,6 @@ export default function ProfileScreen() {
                     onPress={() => { }}
                     style={styles.actionButton}
                 />
-                <Button
-                    title="Réglages"
-                    variant="secondary"
-                    onPress={() => { }}
-                    style={styles.actionButton}
-                />
-
-                <Button
-                    title="Se déconnecter"
-                    variant="ghost"
-                    onPress={signOut}
-                    style={styles.logoutButton}
-                />
             </View>
         </ScrollView>
     );
@@ -168,9 +165,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    topBar: {
+        flexDirection: 'row',
+        paddingHorizontal: 20,
+        paddingTop: 10,
+    },
+    settingsButton: {
+        padding: 8,
+    },
     header: {
         alignItems: 'center',
-        marginTop: 40,
+        marginTop: 10,
         marginBottom: 30,
     },
     avatar: {
@@ -231,10 +236,6 @@ const styles = StyleSheet.create({
     },
     actionButton: {
         marginBottom: 12,
-    },
-    logoutButton: {
-        marginTop: 20,
-        borderColor: colors.error,
     },
     textSecondary: {
         color: colors.textSecondary,
