@@ -15,10 +15,10 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
 - [x] Configure `expo-secure-store` for Auth persistence (Critical for Mobile Auth).
 
 ## Phase 1: Foundation (Auth & Profile)
-- [ ] **Supabase Setup:** Initialize Client with Types from Schema.
-- [ ] **Auth Implementation:**
-    - [ ] Create `AuthContext` / Session Provider.
-    - [ ] Implement `expo-secure-store` Adapter for Supabase.
+- [x] **Supabase Setup:** Initialize Client with Types from Schema.
+- [/] **Auth Implementation:**
+    - [x] Create `AuthContext` / Session Provider.
+    - [x] Implement `expo-secure-store` Adapter for Supabase.
     - [ ] Build Login Screen (Gold & Carbon UI).
     - [ ] Build Sign-up Screen.
 - [ ] **Profile Feature:**
