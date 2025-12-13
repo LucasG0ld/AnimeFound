@@ -1,29 +1,38 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity, ActivityIndicator, Share } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import { Image } from 'expo-image';
 import { colors } from '../../core/theme/colors';
-import { useGroupMembers } from '../../features/groups/useGroupMembers';
+import { useGroupMembers, GroupMemberDetails } from '../../features/groups/useGroupMembers';
 import { useUserGroups } from '../../features/groups/useUserGroups';
 import { useGroupLibrary, GroupAnimeAggregate } from '../../features/groups/useGroupLibrary';
 import { useGroupFeed, FeedEvent } from '../../features/groups/useGroupFeed';
-import { Copy, Shield, User, Star, EyeOff, Eye } from 'lucide-react-native';
+import { Copy, Shield, User, Star, EyeOff, Eye, Trash2, LogOut } from 'lucide-react-native';
+import { useLeaveGroup } from '../../features/groups/useLeaveGroup';
+import { useKickMember } from '../../features/groups/useKickMember';
+import { useAuth } from '../../core/auth/AuthContext';
+import { Button } from '../../components/ui/Button';
 
 const SafeFlashList = FlashList as any;
 
-type ViewMode = 'FEED' | 'CATALOGUE';
+type ViewMode = 'FEED' | 'CATALOGUE' | 'MEMBERS';
 
 export default function GroupDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { user } = useAuth();
   const [viewMode, setViewMode] = useState<ViewMode>('FEED');
 
   const { data: members, isLoading: membersLoading } = useGroupMembers(id!);
   const { data: myGroups } = useUserGroups();
   const { data: catalogue, isLoading: catLoading } = useGroupLibrary(id!);
   const { data: feed, isLoading: feedLoading } = useGroupFeed(id!);
+
+  const leaveGroupMutation = useLeaveGroup();
+  const kickMemberMutation = useKickMember();
 
   const currentGroup = myGroups?.find(g => g.group.id === id)?.group;
   const amIAdmin = myGroups?.find(g => g.group.id === id)?.role === 'ADMIN';
@@ -37,6 +46,49 @@ export default function GroupDetailsScreen() {
     } catch (error) {
       Alert.alert('Erreur', 'Impossible de partager le code.');
     }
+  };
+
+  const handleLeaveGroup = () => {
+    Alert.alert(
+      "Quitter le groupe",
+      "Êtes-vous sûr de vouloir quitter ce groupe ?",
+      [
+        { text: "Annuler", style: "cancel" },
+        {
+          text: "Quitter",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await leaveGroupMutation.mutateAsync(id!);
+              router.back();
+            } catch (e) {
+              Alert.alert('Erreur', 'Impossible de quitter le groupe.');
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  const handleKickMember = (memberId: string, username: string) => {
+    Alert.alert(
+      "Retirer un membre",
+      `Voulez-vous retirer ${username} du groupe ?`,
+      [
+        { text: "Annuler", style: "cancel" },
+        {
+          text: "Retirer",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await kickMemberMutation.mutateAsync({ groupId: id!, userId: memberId });
+            } catch (e) {
+              Alert.alert('Erreur', 'Impossible de retirer le membre.');
+            }
+          }
+        }
+      ]
+    );
   };
 
   // --- RENDERERS ---
@@ -63,10 +115,32 @@ export default function GroupDetailsScreen() {
     </View>
   );
 
+  const renderMemberItem = ({ item }: { item: GroupMemberDetails }) => {
+    const isMe = item.user_id === user?.id; // Should use auth user id
+    const canKick = amIAdmin && !isMe;
+
+    return (
+      <View style={styles.memberCard}>
+        <Image
+          source={item.profile.avatar_url ? { uri: item.profile.avatar_url } : { uri: 'https://via.placeholder.com/40' }}
+          style={styles.memberAvatar}
+        />
+        <View style={{ flex: 1 }}>
+          <Text style={styles.memberName}>{item.profile.username} {isMe && '(Moi)'}</Text>
+          <Text style={styles.memberRole}>{item.role === 'ADMIN' ? 'Administrateur' : 'Membre'}</Text>
+        </View>
+        {item.role === 'ADMIN' && <Shield size={20} color={colors.gold} />}
+        {canKick && (
+          <TouchableOpacity onPress={() => handleKickMember(item.user_id, item.profile.username)} style={styles.kickBtn}>
+            <Trash2 size={20} color={colors.error} />
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+  }
+
   const FeedItem = ({ item }: { item: FeedEvent }) => {
     const [showSpoiler, setShowSpoiler] = useState(false);
-    // Simple logic: if rating < 3 it might be negative, but let's assume all comments are potential spoilers for now if explicitly marked (future feature).
-    // For now, we just show all. Or we can blur if it's long? Let's implement a toggle for the comment.
 
     return (
       <View style={styles.feedCard}>
@@ -144,14 +218,18 @@ export default function GroupDetailsScreen() {
         >
           <Text style={[styles.tabText, viewMode === 'CATALOGUE' && styles.activeTabText]}>Catalogue</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, viewMode === 'MEMBERS' && styles.activeTab]}
+          onPress={() => setViewMode('MEMBERS')}
+        >
+          <Text style={[styles.tabText, viewMode === 'MEMBERS' && styles.activeTabText]}>Membres</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Content */}
       <View style={styles.content}>
-        {viewMode === 'CATALOGUE' ? (
-          catLoading ? (
-            <ActivityIndicator color={colors.gold} />
-          ) : (
+        {viewMode === 'CATALOGUE' && (
+          catLoading ? <ActivityIndicator color={colors.gold} /> : (
             <SafeFlashList
               data={catalogue || []}
               renderItem={renderCatalogueItem}
@@ -159,10 +237,10 @@ export default function GroupDetailsScreen() {
               ListEmptyComponent={<Text style={styles.emptyText}>Aucun anime en commun pour l'instant.</Text>}
             />
           )
-        ) : (
-          feedLoading ? (
-            <ActivityIndicator color={colors.gold} />
-          ) : (
+        )}
+
+        {viewMode === 'FEED' && (
+          feedLoading ? <ActivityIndicator color={colors.gold} /> : (
             <SafeFlashList
               data={feed || []}
               renderItem={({ item }: { item: FeedEvent }) => <FeedItem item={item} />}
@@ -170,6 +248,28 @@ export default function GroupDetailsScreen() {
               ListEmptyComponent={<Text style={styles.emptyText}>Aucune activité récente.</Text>}
             />
           )
+        )}
+
+        {viewMode === 'MEMBERS' && (
+          <View style={{ flex: 1 }}>
+            <SafeFlashList
+              data={members || []}
+              renderItem={renderMemberItem}
+              estimatedItemSize={70}
+            />
+            {/* Leave Group Button in Footer of Members Tab (or global footer?) */}
+            {/* Requirement said "at the very bottom of the screen". Let's put it below the list in this view */}
+            <View style={{ marginTop: 20 }}>
+              <Button
+                title="Quitter le groupe"
+                variant="ghost"
+                onPress={handleLeaveGroup}
+                style={{ borderColor: colors.error }}
+                textStyle={{ color: colors.error }}
+                icon={<LogOut size={18} color={colors.error} />}
+              />
+            </View>
+          </View>
         )}
       </View>
     </View>
@@ -220,4 +320,11 @@ const styles = StyleSheet.create({
   feedCommentBlur: { color: colors.textSecondary, opacity: 0.5, marginTop: 4 },
   spoilerBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 6 },
   spoilerText: { color: colors.textSecondary, fontSize: 10 },
+
+  // Member Card
+  memberCard: { flexDirection: 'row', alignItems: 'center', padding: 12, backgroundColor: colors.slate, borderRadius: 8, marginBottom: 10 },
+  memberAvatar: { width: 40, height: 40, borderRadius: 20, marginRight: 12 },
+  memberName: { color: colors.textPrimary, fontWeight: 'bold', fontSize: 16 },
+  memberRole: { color: colors.textSecondary, fontSize: 12 },
+  kickBtn: { padding: 8, marginLeft: 8 },
 });

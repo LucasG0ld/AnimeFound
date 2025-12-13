@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, ViewStyle, TextStyle, View } from 'react-native';
 import { colors } from '../../core/theme/colors';
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost';
@@ -10,9 +10,11 @@ interface ButtonProps {
     variant?: ButtonVariant;
     loading?: boolean;
     style?: ViewStyle;
+    textStyle?: TextStyle;
+    icon?: React.ReactNode;
 }
 
-export const Button = ({ title, onPress, variant = 'primary', loading = false, style }: ButtonProps) => {
+export const Button = ({ title, onPress, variant = 'primary', loading = false, style, textStyle, icon }: ButtonProps) => {
     const getBackgroundColor = () => {
         switch (variant) {
             case 'primary': return colors.gold;
@@ -46,7 +48,10 @@ export const Button = ({ title, onPress, variant = 'primary', loading = false, s
             {loading ? (
                 <ActivityIndicator color={getTextColor()} />
             ) : (
-                <Text style={[styles.text, { color: getTextColor() }]}>{title}</Text>
+                <View style={styles.contentRow}>
+                    {icon && <View style={styles.iconContainer}>{icon}</View>}
+                    <Text style={[styles.text, { color: getTextColor() }, textStyle]}>{title}</Text>
+                </View>
             )}
         </TouchableOpacity>
     );
@@ -61,6 +66,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         minHeight: 50,
     },
+    contentRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     ghostBorder: {
         borderWidth: 1,
         borderColor: colors.gold,
@@ -68,5 +77,8 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 16,
         fontWeight: '600',
+    },
+    iconContainer: {
+        marginRight: 8,
     },
 });

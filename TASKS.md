@@ -67,9 +67,9 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
     - [x] Move Logout Button to Settings.
     - [x] Add App Version Display.
     - [x] Privacy: "Delete Account" Button (Supabase Auth Cascade).
-- [ ] **Group Administration:**
-    - [ ] Feature: "Leave Group" (Member).
-    - [ ] Feature: "Remove Member" (Admin Only).
+- [x] **Group Administration:**
+    - [x] Feature: "Leave Group" (Member).
+    - [x] Feature: "Remove Member" (Admin Only).
 - [ ] **Final Cleanup:**
     - [ ] Remove all `console.log`.
     - [ ] Ensure 100% French Localization.
