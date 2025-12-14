@@ -9,11 +9,13 @@ import { useGroupMembers, GroupMemberDetails } from '../../features/groups/useGr
 import { useUserGroups } from '../../features/groups/useUserGroups';
 import { useGroupLibrary, GroupAnimeAggregate } from '../../features/groups/useGroupLibrary';
 import { useGroupFeed, FeedEvent } from '../../features/groups/useGroupFeed';
-import { Copy, Shield, User, Star, EyeOff, Eye, Trash2, LogOut } from 'lucide-react-native';
+import { Copy, Shield, User, Star, EyeOff, Eye, Trash2, LogOut, Swords } from 'lucide-react-native';
 import { useLeaveGroup } from '../../features/groups/useLeaveGroup';
 import { useKickMember } from '../../features/groups/useKickMember';
 import { useAuth } from '../../core/auth/AuthContext';
 import { Button } from '../../components/ui/Button';
+import { useActivePoll } from '../../features/voting/useActivePoll';
+import { ActivePollWidget } from '../../features/voting/components/ActivePollWidget';
 
 const SafeFlashList = FlashList as any;
 
@@ -30,6 +32,7 @@ export default function GroupDetailsScreen() {
   const { data: myGroups } = useUserGroups();
   const { data: catalogue, isLoading: catLoading } = useGroupLibrary(id!);
   const { data: feed, isLoading: feedLoading } = useGroupFeed(id!);
+  const { data: activePoll, refetch: refetchPoll } = useActivePoll(id!);
 
   const leaveGroupMutation = useLeaveGroup();
   const kickMemberMutation = useKickMember();
@@ -202,6 +205,26 @@ export default function GroupDetailsScreen() {
             </TouchableOpacity>
           )}
         </View>
+      </View>
+
+      {/* VOTING WIDGET SECTION */}
+      <View style={{ padding: 16, paddingBottom: 0 }}>
+        {activePoll ? (
+          <ActivePollWidget
+            pollId={activePoll.id}
+            isAdmin={amIAdmin}
+            onClose={() => refetchPoll()}
+          />
+        ) : (
+          amIAdmin && (
+            <Button
+              title="Démarrer un Duel"
+              onPress={() => router.push(`/group/${id}/create-poll`)}
+              icon={<Swords size={20} color={colors.black} />}
+              style={{ marginBottom: 10 }}
+            />
+          )
+        )}
       </View>
 
       {/* Tabs */}

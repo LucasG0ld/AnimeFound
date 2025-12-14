@@ -78,15 +78,15 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
 - [x] **Database Schema (Voting):**
     - [x] Design tables: `polls`, `poll_candidates`, `votes`.
     - [x] Create migration SQL file.
-- [ ] **Realtime Logic:**
-    - [ ] Enable Supabase Realtime on `votes`.
-    - [ ] Create `usePollRealtime` hook.
-- [ ] **UI - Create Duel (Admin):**
-    - [ ] "Démarrer un vote" flow in Group Screen.
-    - [ ] Candidate Selection (from Plan to Watch).
-- [ ] **UI - The Arena (Voting Screen):**
-    - [ ] Dedicated Voting View with Real-time progress.
-    - [ ] Interaction: Tap to Vote.
-    - [ ] "Close Vote" Admin Action.
+- [x] **Realtime Logic:**
+    - [x] Enable Supabase Realtime on `votes`.
+    - [x] Create `usePollRealtime` hook.
+- [x] **UI - Create Duel (Admin):**
+    - [x] "Démarrer un vote" flow in Group Screen.
+    - [x] Candidate Selection (from Plan to Watch).
+- [x] **UI - The Arena (Voting Screen):**
+    - [x] Dedicated Voting View with Real-time progress.
+    - [x] Interaction: Tap to Vote.
+    - [x] "Close Vote" Admin Action.
 - [ ] **UI - Results:**
     - [ ] Winner announcement screen.

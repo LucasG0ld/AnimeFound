@@ -12,10 +12,12 @@ interface ButtonProps {
     style?: ViewStyle;
     textStyle?: TextStyle;
     icon?: React.ReactNode;
+    disabled?: boolean;
 }
 
-export const Button = ({ title, onPress, variant = 'primary', loading = false, style, textStyle, icon }: ButtonProps) => {
+export const Button = ({ title, onPress, variant = 'primary', loading = false, style, textStyle, icon, disabled }: ButtonProps) => {
     const getBackgroundColor = () => {
+        if (disabled && !loading) return colors.slate; // Disabled state
         switch (variant) {
             case 'primary': return colors.gold;
             case 'secondary': return colors.slate;
@@ -25,6 +27,7 @@ export const Button = ({ title, onPress, variant = 'primary', loading = false, s
     };
 
     const getTextColor = () => {
+        if (disabled && !loading) return colors.textSecondary;
         switch (variant) {
             case 'primary': return colors.black;
             case 'secondary': return colors.gold;
@@ -43,7 +46,7 @@ export const Button = ({ title, onPress, variant = 'primary', loading = false, s
             ]}
             onPress={onPress}
             activeOpacity={0.8}
-            disabled={loading}
+            disabled={loading || disabled}
         >
             {loading ? (
                 <ActivityIndicator color={getTextColor()} />
