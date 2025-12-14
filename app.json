@@ -30,7 +30,19 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
-    ]
+      "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#FFBF00"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "replaceme-with-real-id"
+      }
+    }
   }
 }

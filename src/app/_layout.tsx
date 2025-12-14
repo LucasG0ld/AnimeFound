@@ -8,10 +8,15 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 
+import { useRegisterPushToken } from '../core/hooks/useRegisterPushToken';
+
 const RootLayoutNav = () => {
     const { session, loading } = useAuth();
     const segments = useSegments();
     const router = useRouter();
+
+    // Register Push Token on App Launch (if logged in logic is inside the hook)
+    useRegisterPushToken();
 
     useEffect(() => {
         if (!process.env.EXPO_PUBLIC_SUPABASE_URL || !process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY) {

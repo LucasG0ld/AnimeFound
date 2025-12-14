@@ -4,7 +4,7 @@ This file tracks the progress of the AnimeFound application development.
 Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_ANALYSIS.md`.
 
 ## Project Status
-**Current Phase:** Phase 5 (Completed)
+**Current Phase:** Phase 6 (Completed)
 
 ---
 
@@ -90,3 +90,19 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
     - [x] "Close Vote" Admin Action.
 - [x] **UI - Results:**
     - [x] Winner announcement screen.
+
+## Phase 6: Push Notifications
+**Goal:** Engage users by notifying them of important group events (New Duel).
+
+- [x] **Database Setup:**
+    - [x] Add `expo_push_token` column to `profiles` table.
+    - [x] Update RLS to allow users to write their own token.
+- [x] **Frontend - Permissions & Tokens:**
+    - [x] Install `expo-notifications` & `expo-device`.
+    - [x] Configure `app.json`.
+    - [x] Create `usePushNotifications` hook (Request Perms -> Get Token -> Save to DB).
+- [x] **Logic - Sender Service:**
+    - [x] Create `src/core/services/notifications.ts`.
+    - [x] Implement `sendPushToGroup(groupId, title, body)` using Expo Push API.
+- [x] **Integration - Triggers:**
+    - [x] Trigger notification on "New Poll" (`useCreatePoll`).

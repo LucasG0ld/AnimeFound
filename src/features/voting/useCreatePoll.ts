@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../../core/services/supabase';
 import { useAuth } from '../../core/auth/AuthContext';
+import { sendPushToGroup } from '../../core/services/notifications';
+import { useUserProfile } from '../profile/useUserProfile';
 
 interface CreatePollPayload {
     groupId: string;
@@ -10,6 +12,7 @@ interface CreatePollPayload {
 export const useCreatePoll = () => {
     const queryClient = useQueryClient();
     const { user } = useAuth();
+    const { data: profile } = useUserProfile(); // useUserProfile handles auth internally
 
     return useMutation({
         mutationFn: async ({ groupId, animeIds }: CreatePollPayload) => {
@@ -42,8 +45,17 @@ export const useCreatePoll = () => {
 
             return poll;
         },
-        onSuccess: (_, { groupId }) => {
+        onSuccess: async (poll, { groupId }) => {
             queryClient.invalidateQueries({ queryKey: ['active_poll', groupId] });
+
+            if (poll && user) {
+                // Fire and Forget Notification
+                const senderName = profile?.username || "Un membre";
+                sendPushToGroup(groupId, user.id, {
+                    title: "⚔️ C'est l'Heure du Duel !",
+                    body: `${senderName} a lancé un vote. Venez décider du prochain anime !`,
+                });
+            }
         },
     });
 };
