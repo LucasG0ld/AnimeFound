@@ -67,7 +67,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
             // Hardcoded redirect to ensure consistency with scheme
             const redirectUrl = Linking.createURL('/auth/callback');
-            console.log('OAuth Redirect URL sent to Supabase:', redirectUrl);
 
             // Ensure browser session cleanup
             WebBrowser.maybeCompleteAuthSession();
@@ -81,17 +80,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             });
 
             if (error) throw error;
+            if (!data.url) throw new Error("No URL returned from Supabase");
 
-            if (data?.url) {
-                console.log('Opening Auth Session with URL:', data.url);
-                const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUrl);
+            // 2. Open WebBrowser
+            const result = await WebBrowser.openAuthSessionAsync(
+                data.url,
+                redirectUrl,
+                {
+                    showInRecents: true,
+                }
+            );
 
-                console.log('WebBrowser Result:', result);
+            // 3. Handle Result
+            if (result.type === 'success') {
+                const { url } = result;
+                if (url) {
+                    supabase.auth.startAutoRefresh(); // ensure session flows
 
-                if (result.type === 'success' && result.url) {
-                    const url = result.url;
-                    console.log('Deep Link received:', url);
-
+                    // The following logic was part of the original implementation to manually set session
+                    // after a successful deep link. With startAutoRefresh, Supabase should handle this.
+                    // However, if auto-refresh doesn't immediately pick up the session,
+                    // this manual parsing might still be needed as a fallback or for immediate session update.
+                    // Keeping it for robustness based on the original intent.
                     if (url.includes('access_token') || url.includes('code')) {
                         const params = new URLSearchParams(url.split('#')[1] || url.split('?')[1]);
                         const access_token = params.get('access_token');

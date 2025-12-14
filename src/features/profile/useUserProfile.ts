@@ -12,10 +12,8 @@ export interface UserProfile {
 export const useUserProfile = () => {
     const { session } = useAuth();
 
-    const fetchProfile = async (): Promise<UserProfile | null> => {
-        if (!session?.user.id) return null;
-
-        console.log('Fetching Profile for User ID:', session.user.id);
+    const fetchProfile = async () => {
+        if (!session?.user) return null;
 
         const { data, error } = await supabase
             .from('profiles')
@@ -24,12 +22,13 @@ export const useUserProfile = () => {
             .single();
 
         if (error) {
-            console.error('Error fetching profile (might retry):', error.message);
-            // Throw error to trigger retry in React Query
+            console.error('Error fetching profile:', error);
+            // Don't throw if it's just missing (e.g. new user not yet created by trigger)
+            // But usually we want to know.
+            // For now, let's allow retry.
             throw error;
         }
 
-        console.log('Profile fetched successfully:', data);
         return data;
     };
 

@@ -116,7 +116,7 @@ export default function AnimeDetailsScreen() {
                     <Text style={styles.title}>{anime.title_en || anime.title_jp}</Text>
 
                     <View style={styles.metaRow}>
-                        <Text style={styles.year}>{anime.year || 'Année inconnu'}</Text>
+                        <Text style={styles.year}>{anime.year || 'Année inconnue'}</Text>
                         <View style={styles.typeChip}>
                             <Text style={styles.typeText}>{anime.type || 'TV'}</Text>
                         </View>

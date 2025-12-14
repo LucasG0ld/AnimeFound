@@ -30,7 +30,18 @@ All data is synchronized in real-time between members of a group via the **Share
 - **Activity Feed:** A timeline of "Who did what" (e.g., "Lucas updated Naruto: 9/10").
 - **Spoiler Protection:** Comments are blurred by default if they contain spoilers.
 
-### 4. 🎨 UI/UX Polish
+### 4. 🎭 Anime Details & Interaction
+- **Deep Dive:** New dedicated Anime Details screen with banner art.
+- **Engagement:** Rate (1-10), Comment, and Manage Status directly from the anime page.
+
+### 5. 🛡️ User & Group Administration
+- **Settings:** Manage account, logout, and **delete account** (with cascading data removal).
+- **Group Management:**
+    - **Leave Group:** Users can leave groups they no longer want to share with.
+    - **Kick Member:** Admins have full control to remove members.
+    - **Member List:** Dedicated view to see who is in the squad.
+
+### 6. 🎨 UI/UX Polish
 - **Theme:** Strict adherence to `#2B2B2B` (Carbon) and `#FFBF00` (Gold).
 - **Localization:** 100% French interface.
 - **Empty States:** Friendly calls to action when lists are empty.
@@ -42,5 +53,6 @@ All data is synchronized in real-time between members of a group via the **Share
 - **API:** Jikan v4 (Anime Data)
 
 ## 🔮 Future Roadmap (Post-MVP)
-- **Phase 4:** Voting System ("C'est l'Heure du Duel") - Decide what to watch next.
-- **Phase 5:** Notifications (Push Notifications for group activity).
+## 🔮 Future Roadmap (Post-MVP)
+- **Phase 5:** Voting System ("C'est l'Heure du Duel") - Decide what to watch next.
+- **Phase 6:** Notifications (Push Notifications for group activity).
