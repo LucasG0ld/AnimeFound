@@ -4,7 +4,7 @@ This file tracks the progress of the AnimeFound application development.
 Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_ANALYSIS.md`.
 
 ## Project Status
-**Current Phase:** Phase 4 (Completed)
+**Current Phase:** Phase 5 (Voting)
 
 ---
 
@@ -73,3 +73,20 @@ Based on `@docs/07_DEVELOPMENT_WORKFLOW_AND_TESTS.md` and `@docs/03_TECH_STACK_A
 - [x] **Final Cleanup:**
     - [x] Remove all `console.log`.
     - [x] Ensure 100% French Localization.
+
+## Phase 5: Voting System (Realtime)
+- [x] **Database Schema (Voting):**
+    - [x] Design tables: `polls`, `poll_candidates`, `votes`.
+    - [x] Create migration SQL file.
+- [ ] **Realtime Logic:**
+    - [ ] Enable Supabase Realtime on `votes`.
+    - [ ] Create `usePollRealtime` hook.
+- [ ] **UI - Create Duel (Admin):**
+    - [ ] "Démarrer un vote" flow in Group Screen.
+    - [ ] Candidate Selection (from Plan to Watch).
+- [ ] **UI - The Arena (Voting Screen):**
+    - [ ] Dedicated Voting View with Real-time progress.
+    - [ ] Interaction: Tap to Vote.
+    - [ ] "Close Vote" Admin Action.
+- [ ] **UI - Results:**
+    - [ ] Winner announcement screen.
