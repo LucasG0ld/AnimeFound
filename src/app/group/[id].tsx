@@ -16,6 +16,7 @@ import { useAuth } from '../../core/auth/AuthContext';
 import { Button } from '../../components/ui/Button';
 import { useActivePoll } from '../../features/voting/useActivePoll';
 import { ActivePollWidget } from '../../features/voting/components/ActivePollWidget';
+import { PollWinnerWidget } from '../../features/voting/components/PollWinnerWidget';
 
 const SafeFlashList = FlashList as any;
 
@@ -28,18 +29,22 @@ export default function GroupDetailsScreen() {
   const { user } = useAuth();
   const [viewMode, setViewMode] = useState<ViewMode>('FEED');
 
+  // --- DATA FETCHING ---
   const { data: members, isLoading: membersLoading } = useGroupMembers(id!);
   const { data: myGroups } = useUserGroups();
   const { data: catalogue, isLoading: catLoading } = useGroupLibrary(id!);
   const { data: feed, isLoading: feedLoading } = useGroupFeed(id!);
   const { data: activePoll, refetch: refetchPoll } = useActivePoll(id!);
 
+  // --- MUTATIONS ---
   const leaveGroupMutation = useLeaveGroup();
   const kickMemberMutation = useKickMember();
 
+  // --- DERIVED STATE ---
   const currentGroup = myGroups?.find(g => g.group.id === id)?.group;
   const amIAdmin = myGroups?.find(g => g.group.id === id)?.role === 'ADMIN';
 
+  // --- HANDLERS ---
   const handleInvite = async () => {
     if (!currentGroup) return;
     try {
@@ -187,6 +192,41 @@ export default function GroupDetailsScreen() {
     );
   };
 
+  // --- VOTING HEADER LOGIC ---
+  const renderVotingSection = () => {
+    if (activePoll) {
+      if (activePoll.status === 'OPEN') {
+        return (
+          <ActivePollWidget
+            pollId={activePoll.id}
+            isAdmin={amIAdmin}
+            onClose={() => refetchPoll()}
+          />
+        );
+      } else if (activePoll.status === 'CLOSED') {
+        return (
+          <PollWinnerWidget
+            pollId={activePoll.id}
+            isAdmin={amIAdmin}
+          />
+        );
+      }
+    }
+
+    // No Poll -> Show Create Button (Admin Only)
+    if (amIAdmin) {
+      return (
+        <Button
+          title="Démarrer un Duel"
+          onPress={() => router.push(`/group/${id}/create-poll`)}
+          icon={<Swords size={20} color={colors.black} />}
+          style={{ marginBottom: 10 }}
+        />
+      );
+    }
+    return null;
+  };
+
   if (membersLoading || !currentGroup) {
     return <View style={styles.center}><ActivityIndicator size="large" color={colors.gold} /></View>;
   }
@@ -207,24 +247,9 @@ export default function GroupDetailsScreen() {
         </View>
       </View>
 
-      {/* VOTING WIDGET SECTION */}
+      {/* VOTING SECTION */}
       <View style={{ padding: 16, paddingBottom: 0 }}>
-        {activePoll ? (
-          <ActivePollWidget
-            pollId={activePoll.id}
-            isAdmin={amIAdmin}
-            onClose={() => refetchPoll()}
-          />
-        ) : (
-          amIAdmin && (
-            <Button
-              title="Démarrer un Duel"
-              onPress={() => router.push(`/group/${id}/create-poll`)}
-              icon={<Swords size={20} color={colors.black} />}
-              style={{ marginBottom: 10 }}
-            />
-          )
-        )}
+        {renderVotingSection()}
       </View>
 
       {/* Tabs */}
@@ -280,8 +305,7 @@ export default function GroupDetailsScreen() {
               renderItem={renderMemberItem}
               estimatedItemSize={70}
             />
-            {/* Leave Group Button in Footer of Members Tab (or global footer?) */}
-            {/* Requirement said "at the very bottom of the screen". Let's put it below the list in this view */}
+            {/* Leave Group Button */}
             <View style={{ marginTop: 20 }}>
               <Button
                 title="Quitter le groupe"
